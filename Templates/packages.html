@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Packages</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        body {
+        background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+        min-height: 100vh;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #000000; /* Black color */
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .a {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        justify-content: center;
+    }
+
+    .card-body {
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+    }
+
+    h3 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+        color: #2e7d32; /* Nature green color */
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+
+    h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background: #81c784; /* Accent green */
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1rem 0;
+        flex-grow: 1;
+    }
+
+    li {
+        padding: 0.5rem 0;
+        font-size: 0.95rem;
+        color: #424242;
+        display: flex;
+        align-items: center;
+    }
+
+    li::before {
+        content: '🌍';
+        margin-right: 0.75rem;
+        font-size: 1.2em;
+    }
+
+    form {
+        margin-top: auto;
+        padding-top: 1rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-book {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.9rem;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        background: #43a047; /* Nature green */
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-book:hover {
+        background: #2e7d32;
+        transform: translateY(-2px);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        h2 {
+            font-size: 1.6rem;
+        }
+
+        .card-body {
+            padding: 1.2rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+        }
+
+        .btn-book {
+            width: auto;
+            padding: 0.75rem 1.5rem;
+        }
+    }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Available Travel Packages</h2>
+        <div class="a">
+            {% for package in packages %}
+            <div class="card-body">
+                <h3>{{package.package_name}}</h3>
+                <ul>
+                    {% for destination in package.split_destinations %}
+                    <li>{{destination}}</li>
+                    {% endfor %}
+                    <p>Available Months: {{ package.available_month|join:", " }}</p>
+                </ul>
+                <p>💸 per person {{package.package_price}}rs only</p>
+                <form action="{% url 'booking_page' package.package_name %}" method="POST">
+                    
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-book">Book Now</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+                    
+                </div>
+            </div>
+</div>
+<style>
+.message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.message {
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+}
+
+.alert-success {
+    background-color: #0d7d27;
+    color: #ffffff;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #b71f2f;
+    border: 1px solid #f5c6cb;
+}
+
+.close-btn {
+    cursor: pointer;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}
+</style>
+
+{% if messages %}
+    <div class="popup" id="popup">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+        <button onclick="closePopup()">x</button>
+    </div>
+
+    <div id="popup-overlay" onclick="closePopup()"></div>
+
+    <script>
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("popup-overlay").style.display = "none";
+        }
+
+        // Close popup automatically after 4 seconds
+        setTimeout(closePopup, 4000);
+    </script>
+{% endif %}
+<footer class="bg-dark text-light py-4">
+    <div class="container text-center">
+        <p class="mb-2">Developed by Devendran C</p>
+        <div class="d-flex justify-content-center">
+            <a href="https://www.linkedin.com/in/devendran-c/" target="_blank" class="text-light mx-3" style="font-size: 30px;">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://github.com/Rex-Dev" target="_blank" class="text-light mx-3" style="font-size: 30px;">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://x.com/rex_deva" target="_blank" class="text-light mx-3" style="font-size: 30px;">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="mailto:rexdeva.in@gmail.com" class="text-light mx-3" style="font-size: 30px;">
+                <i class="fas fa-envelope"></i>
+            </a>
+            <a href="https://wa.me/+917306930918" target="_blank" class="text-light mx-3" style="font-size: 30px;">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </div>
+        <p class="mt-3">© 2025 Rex Travels. All rights reserved. Terms of Service | Privacy Policy.</p>
+    </div>
+</footer>
+    <style>
+        .alert-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: rgb(255, 255, 255);
+            padding: 15px;
+            border-radius: 5px;
+            z-index: 10000;
+        }
+        .alert {
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .alert-success {
+            background-color: rgb(2, 59, 2);
+        }
+        .alert-error {
+            background-color: red;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .content {
+            flex-grow: 1;
+        }
+        .mb-2{
+            margin-top: -7px;
+            padding-top: 0px;
+            padding-bottom: 5px;
+        }
+        footer {
+            background-color: #000000; 
+            color: #fff;
+            padding: 8px 0; 
+            text-align: center;
+            height: 150px;
+            padding-top: 5px;
+            line-height: 60%;
+            height: 110px;
+        }
+
+        footer i {
+            font-size: 24px;
+            margin: 0 10px;
+        }
+        footer i:hover{
+            transform: scale(1.1);
+        }
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        @media (max-width: 767px) {
+            footer i {
+                font-size: 20px;
+                margin: 0 8px;
+            }
+        }
+    </style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

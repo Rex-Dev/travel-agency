@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Booking Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+            <h1>Travel Agency Booking Page</h1>
+            <form method="POST" action="{% url 'booking_page' package_name %}">
+                {% csrf_token %}
+                <label for="persons">No. of persons:
+                    <input type="number" id="persons" name="persons" required min="1">
+                </label>
+                <label for="date">
+                    <input type="date" id="date" name="booking_date" required>
+                </label>
+                <label for="method">
+                    <select id="pm" name="pm" required>
+                        <option value="card">Card Payment</option>
+                        <option value="upi">UPI Payment</option>
+                    </select>
+                </label>
+                <button type="submit">Book Now</button>  <!-- ✅ Submit happens only when clicked -->
+            </form>            
+            <p>{{ error }}</p>
+            <script>
+       document.addEventListener("DOMContentLoaded", function () {
+    let dateInput = document.getElementById("date");
+
+    let today = new Date();
+    let nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    let minDate = nextMonth.toISOString().split("T")[0];
+    let maxDate = new Date(nextMonth.getFullYear() + 3, nextMonth.getMonth(), nextMonth.getDate()).toISOString().split("T")[0];
+
+    dateInput.setAttribute("min", minDate);
+    dateInput.setAttribute("max", maxDate);
+
+    // Enable when user interacts with form
+    dateInput.addEventListener("focus", function () {
+        dateInput.disabled = false;
+    });
+});
+            </script>
+    </body>
+</html>
